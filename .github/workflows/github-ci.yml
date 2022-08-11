@@ -1,0 +1,37 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Test
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+               ./build_linux.sh                
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+               ./build_win.cmd
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+               ./build_mac.sh
+          fi
+          echo "Moves all file to another directory"
+          mkdir relocated_dir
+          mv bin/Release/* relocated_dir
+          rm -rf bin/ build/
+          echo "Run test form current directory"
+          relocated_dir/TestNative
+          echo "Run test form relocated directory"
+          cd relocated_dir/
+          ./TestNative
+        shell: bash

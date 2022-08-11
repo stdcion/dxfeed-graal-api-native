@@ -1,0 +1,206 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "cmake-pedantic",
+      "hidden": true,
+      "description": "Pedantic settings for cmake",
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true,
+        "systemVars": false
+      },
+      "errors": {
+        "dev": true,
+        "deprecated": true
+      }
+    },
+    {
+      "name": "dependencies",
+      "hidden": true,
+      "cacheVariables": {
+        "GRAALVM_TEST_NATIVE_LIB_BASE_PATH": {
+          "type": "STRING",
+          "value": "https://github.com/stdcion/graalvm-test-native-lib/releases/download/"
+        },
+        "GRAALVM_TEST_NATIVE_LIB_VERSION": {
+          "type": "STRING",
+          "value": "v1.0.1"
+        }
+      }
+    },
+    {
+      "name": "conf-common",
+      "hidden": true,
+      "description": "General settings that apply to all configurations",
+      "inherits": [
+        "cmake-pedantic",
+        "dependencies"
+      ],
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "ON",
+        "SKIP_TESTS": {
+          "type": "BOOL",
+          "value": "FALSE"
+        }
+      }
+    },
+    {
+      "name": "language-std",
+      "hidden": true,
+      "description": "This preset makes sure the project actually builds with at least the specified standard",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "11",
+        "CMAKE_C_STANDARD": "11",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF"
+      }
+    },
+    {
+      "name": "flags-win-vs",
+      "hidden": true,
+      "description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/utf-8 /W4 /volatile:iso /EHsc /Zc:throwingNew"
+      }
+    },
+    {
+      "name": "flags-linux",
+      "hidden": true,
+      "description": "Common flags for Linux",
+      "cacheVariables": {
+        "CMAKE_SKIP_BUILD_RPATH": "ON",
+        "CMAKE_BUILD_WITH_INSTALL_RPATH": "ON",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "OFF",
+        "CMAKE_BUILD_RPATH_USE_ORIGIN": "ON",
+        "CMAKE_INSTALL_RPATH": "$ORIGIN"
+      }
+    },
+    {
+      "name": "flags-mac",
+      "hidden": true,
+      "description": "Common flags for macOS",
+      "cacheVariables": {
+        "CMAKE_MACOSX_RPATH": "ON",
+        "CMAKE_SKIP_BUILD_RPATH": "ON",
+        "CMAKE_BUILD_WITH_INSTALL_RPATH": "ON",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "OFF",
+        "CMAKE_BUILD_RPATH_USE_ORIGIN": "ON",
+        "CMAKE_INSTALL_RPATH": "@loader_path"
+      }
+    },
+    {
+      "name": "conf-win-vs",
+      "description": "Common preset for Windows and Visual Studio",
+      "inherits": [
+        "conf-common",
+        "language-std",
+        "flags-win-vs"
+      ],
+      "cacheVariables": {
+        "CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS": "ON"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "Visual Studio"
+        }
+      }
+    },
+    {
+      "name": "conf-win-vs-debug",
+      "description": "Debug preset for Windows and Visual Studio",
+      "inherits": [
+        "conf-win-vs"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "conf-win-vs-release",
+      "description": "Release preset for Windows and Visual Studio",
+      "inherits": [
+        "conf-win-vs"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "conf-linux",
+      "description": "Common preset for Linux",
+      "inherits": [
+        "conf-common",
+        "language-std",
+        "flags-linux"
+      ]
+    },
+    {
+      "name": "conf-linux-release",
+      "description": "Release preset for Linux",
+      "inherits": [
+        "conf-linux"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "conf-linux-debug",
+      "description": "Debug preset for Linux",
+      "inherits": [
+        "conf-linux"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "conf-mac",
+      "description": "Common preset for macOS",
+      "inherits": [
+        "conf-common",
+        "language-std",
+        "flags-mac"
+      ]
+    },
+    {
+      "name": "conf-mac-release",
+      "description": "Release preset for macOS",
+      "inherits": [
+        "conf-mac"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "conf-mac-debug",
+      "description": "Debug preset for macOS",
+      "inherits": [
+        "conf-mac"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-win-vs",
+      "configurePreset": "conf-win-vs"
+    },
+    {
+      "name": "build-linux",
+      "configurePreset": "conf-linux"
+    },
+    {
+      "name": "build-mac",
+      "configurePreset": "conf-mac"
+    }
+  ]
+}
