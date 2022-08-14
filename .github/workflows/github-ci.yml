@@ -8,11 +8,19 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.os }}
+    name: Build on ${{ matrix.OS_NAME }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            OS_NAME: linux
+          - os: windows-latest
+            OS_NAME: windows
+          - os: macos-latest
+            OS_NAME: macos-x86-64
+          - os: [self-hosted, macOS, ARM64]
+            OS_NAME: macos-arm64
 
     steps:
       - uses: actions/checkout@v3
