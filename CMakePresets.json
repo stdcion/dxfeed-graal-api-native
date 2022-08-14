@@ -27,7 +27,7 @@
         },
         "GRAALVM_TEST_NATIVE_LIB_VERSION": {
           "type": "STRING",
-          "value": "v1.0.1"
+          "value": "v1.0.3"
         }
       }
     },
