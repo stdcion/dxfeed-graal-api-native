@@ -43,6 +43,7 @@
       "installDir": "${sourceDir}/install/${presetName}",
       "cacheVariables": {
         "BUILD_SHARED_LIBS": "ON",
+        "CMAKE_ENABLE_EXPORTS": "TRUE",
         "SKIP_TESTS": {
           "type": "BOOL",
           "value": "FALSE"
