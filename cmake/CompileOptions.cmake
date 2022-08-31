@@ -69,3 +69,12 @@ set(DEFAULT_LINKER_OPTIONS "")
 if (DEFINED GENERIC_LINKER_OPTIONS)
     set(DEFAULT_LINKER_OPTIONS ${DEFAULT_LINKER_OPTIONS} ${GENERIC_LINKER_OPTIONS} ${DEFAULT_LINKER_SCRIPT})
 endif ()
+
+# Use pthreads on mingw and linux
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    set(DEFAULT_LINKER_OPTIONS
+            PUBLIC
+            ${DEFAULT_LINKER_OPTIONS}
+            -pthread
+            )
+endif ()
